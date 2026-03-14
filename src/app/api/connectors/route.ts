@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
   const connector = await db.agentConnector.create({
     data: {
       ...parsed.data,
-      config: parsed.data.config as Prisma.InputJsonValue,
+      config: parsed.data.config as unknown as Prisma.InputJsonValue,
     },
   });
 
