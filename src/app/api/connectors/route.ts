@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { z } from "zod";
-import { ConnectorType } from "@prisma/client";
+import { ConnectorType, Prisma } from "@prisma/client";
 
 const createConnectorSchema = z.object({
   agentId: z.string(),
@@ -34,7 +34,10 @@ export async function POST(request: NextRequest) {
   }
 
   const connector = await db.agentConnector.create({
-    data: parsed.data,
+    data: {
+      ...parsed.data,
+      config: parsed.data.config as unknown as Prisma.InputJsonValue,
+    },
   });
 
   return NextResponse.json(connector, { status: 201 });
