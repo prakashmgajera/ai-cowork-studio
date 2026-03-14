@@ -1,5 +1,4 @@
 import Anthropic from "@anthropic-ai/sdk";
-import type { MessageParam } from "@anthropic-ai/sdk/resources/messages";
 
 export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -27,7 +26,7 @@ export async function streamChat({
     system += `\n\n## Relevant context from project documents:\n\n${ragContext}\n\nUse the above context to answer questions when relevant.`;
   }
 
-  const formattedMessages: MessageParam[] = messages.map((m) => ({
+  const formattedMessages: Anthropic.Messages.MessageParam[] = messages.map((m) => ({
     role: m.role,
     content: m.content,
   }));
@@ -57,7 +56,7 @@ export async function chat({
     system += `\n\n## Relevant context from project documents:\n\n${ragContext}\n\nUse the above context to answer questions when relevant.`;
   }
 
-  const formattedMessages: MessageParam[] = messages.map((m) => ({
+  const formattedMessages: Anthropic.Messages.MessageParam[] = messages.map((m) => ({
     role: m.role,
     content: m.content,
   }));
