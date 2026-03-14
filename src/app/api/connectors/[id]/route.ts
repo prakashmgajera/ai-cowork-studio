@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 const updateConnectorSchema = z.object({
@@ -34,10 +35,13 @@ export async function PATCH(
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const updated = await db.agentConnector.update({
-    where: { id },
-    data: parsed.data,
-  });
+  const data: Prisma.AgentConnectorUpdateInput = {};
+  if (parsed.data.name !== undefined) data.name = parsed.data.name;
+  if (parsed.data.enabled !== undefined) data.enabled = parsed.data.enabled;
+  if (parsed.data.config !== undefined)
+    data.config = parsed.data.config as unknown as Prisma.InputJsonValue;
+
+  const updated = await db.agentConnector.update({ where: { id }, data });
 
   return NextResponse.json(updated);
 }
